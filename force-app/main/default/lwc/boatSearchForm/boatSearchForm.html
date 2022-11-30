@@ -1,0 +1,9 @@
+<template>
+  <lightning-layout>
+    <lightning-layout-item class="slds-align-middle">
+      <!--値を <lightning-combobox> に、表示する値には selectedBoatTypeId を、選択肢としてプロパティ searchOptions の値を用いて表示します。-->
+      <lightning-combobox class="slds-align-middle" name="boatTypes" value={selectedBoatTypeId} options={searchOptions}
+        onchange={handleSearchOptionChange}></lightning-combobox>
+    </lightning-layout-item>
+  </lightning-layout>
+</template>

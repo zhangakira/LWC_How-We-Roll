@@ -1,0 +1,20 @@
+<template>
+  <!--selectBoat() を使ってクリックイベントに反応する <div> で選択するボートの情報を表示する-->
+  <div onclick={selectBoat} class={tileClass}>
+    <!--ボート画像は、クラスが tile に等しい <div> の背景として設定され、関数 backgroundStyle() で取得-->
+    <div style={backgroundStyle} class="tile"></div>
+    <!--ボートの名前と所有者をタイルの下部に、lower-third をクラスとして使用する <div> の中に追加する。-->
+    <!--Name, Ower's Name, Price, Length, Type-->
+    <div class="lower-third">
+      <h1 class="slds-truncate slds-text-heading_medium">{boat.Name}</h1>
+      <h2 class="slds-truncate slds-text-heading_small">{boat.Contact__r.Name}</h2>
+      <div class="slds-text-body_small">
+        price: <lightning-formatted-number maximum-fraction-digits="2" format-style="currency" currency-code="USD"
+          value={boat.Price__c}></lightning-formatted-number>
+      </div>
+      <div class="slds-text-body-small">Lenghth: {boat.Length__c}</div>
+      <div class="slds-text-body-small">Type: {boat.BoatType__r.Name}</div>
+      <!-- Boat information goes here -->
+    </div>
+  </div>
+</template>

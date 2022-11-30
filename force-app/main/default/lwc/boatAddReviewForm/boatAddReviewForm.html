@@ -1,0 +1,40 @@
+<template>
+  <!-- lightning data service code -->
+  <!-- <lightning-record-edit-form> -->
+  <!--Lightning データサービスのコードでは、BoatReview__c オブジェクトを参照する <lightning-record-edit-form> が必要-->
+  <!--<lightning-record-edit-form> レベルでは、関数 handleSubmit() を使ってフォームを送信-->
+  <!--handleSuccess() を使って、 title に Review Created! を用いた成功のトーストメッセージを表示-->
+  <lightning-record-edit-form object-api-name="BoatReview__c" onsuccess={handleSuccess} onsubmit={handleSubmit}>
+    <lightning-layout multiple-rows="true" vertical-align="stretch">
+      <lightning-layout-item size="8" padding="horizontal-small">
+        <div class="slds-form-element">
+          <!-- review subject field code -->
+          <!--Review Subject と Comment 項目は、Lightning データサービスを利用して BoatReview__c オブジェクトの Name と Comment__c 項目にバインドされてる。
+        そのため、Name にバインドされている <lightning-input-field> には slds-form-element__label クラスの label を使う-->
+          <lightning-input-field field-name="Name"></lightning-input-field>
+        </div>
+      </lightning-layout-item>
+      <lightning-layout-item size="4" padding="horizontal-small">
+        <div class="slds-form-element">
+          <label class="slds-form-element__label" for="record-name">Rating</label>
+          <div class="slds-form-element__control">
+            <!-- add five star rating component -->
+            <!-- fiveStarRating コンポーネントをフォームに追加し、ユーザが評価を入力できるようにする-->
+            <!--fiveStarRating コンポーネントは ratingchange イベントを起動し、boatAddReviewForm は関数 handleRatingChanged でそれを処理-->
+            <c-five-star-rating rating-value={rating} onratingchange={handleRatingChanged}></c-five-star-rating>
+          </div>
+        </div>
+      </lightning-layout-item>
+      <lightning-layout-item padding="horizontal-small">
+        <!-- review comment field code -->
+        <lightning-input-field field-name="Comment__c"></lightning-input-field>
+      </lightning-layout-item>
+    </lightning-layout>
+    <div class="slds-align_absolute-center" style="margin-top: 5px">
+      <!-- add submit button -->
+      <!--Submit (送信)ボタンは label に Submit を設定し、 utility:save のアイコンを使用。-->
+      <lightning-button label="Submit" type="submit" icon-name="utility:save"></lightning-button>
+    </div>
+  </lightning-record-edit-form>
+  <!-- </lightning-record-edit-form> -->
+</template>

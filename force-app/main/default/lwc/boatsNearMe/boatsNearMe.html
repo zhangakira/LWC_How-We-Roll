@@ -1,0 +1,16 @@
+<template>
+   <lightning-card class="slds-is-relative">
+      <!-- The template and lightning-spinner goes here -->
+      <!--<template> の中に <lightning-spinner> を追加し、alternative-text には Loading を、variant には brand を用います-->
+      <!--プロパティisLoading をチェックして、スピナーを表示する必要があるかどうかを定義-->
+      <template if:true={isLoading}>
+         <lightning-spinner alternative-text="Loading" variant="brand">
+         </lightning-spinner>
+      </template>
+      <!-- The lightning-map goes here -->
+      <!--地図を表示するには、 mapMarkers プロパティをコンポーネントの地図マーカーとして利用する <lightning-map> を追加-->
+      <!--mapMarkers を渡して <lightning-map> を呼び出し、<lightning-spinner> のすぐ下に配置する。-->
+      <lightning-map map-markers={mapMarkers}></lightning-map>
+      <div slot="footer">Top 10 Only!</div>
+   </lightning-card>
+</template>

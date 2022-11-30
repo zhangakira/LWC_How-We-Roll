@@ -1,0 +1,84 @@
+<template>
+  <!-- div for when there are no reviews available -->
+  <!--boatReviews コンポーネントは Lightning コンポーネントを用いて独立したスクロール領域を定義。
+  レビューが見つからない場合、reviewsToShow() という getter 関数にバインドされた No reviews available というテキストを出力。
+  テキストはスクロール可能な領域内の中央に配置。-->
+  <template if:false={reviewsToShow}>
+    <div class="slds-feed, reviews-style, slds-is-relative, slds-scrollable_y">
+      <div class="slds-align_absolute-center">No reviews available</div>
+    </div>
+  </template>
+  <!-- div for when there are reviews available -->
+  <div>
+    <!-- insert spinner -->
+    <!--サイズが small の <lightning-spinner> を boatReviews にも含め、variant には brand を、
+    代替テキストには Loading を、getReviews() がロード中かどうかを確認するために isLoading を使用。-->
+    <template if:true={isLoading}>
+      <lightning-spinner variant="brand" alternative-text="Loading" size="small"></lightning-spinner>
+    </template>
+    <template if:true={reviewsToShow}>
+      <ul class="slds-feed__list">
+        <!-- start iteration -->
+        <!--ボートのレビューが見つかった場合、boatReview という反復プロパティを用いて getAllReviews Apex メソッドで指定したすべての項目を出力。
+        その下に、レビューのリストを表示。表示は SLDS の Feed コンポーネント の設計に準拠している。-->
+        <template for:each={boatReviews} for:item="boatReview">
+          <li class="slds-feed__item" key={boatReview.Id}>
+            <!--それぞれのボートレビューがクラス slds-post を使用する article の中に入れる-->
+            <article class="slds-post">
+              <!--各 article は、slds-post__header slds-media クラスを使用する header を使用、
+              これにより、求めているルックアンドフィールを実現-->
+              <header class="slds-post__header slds-media">
+                <div class="slds-media__figure">
+                  <!-- display the creator’s picture -->
+                  <!--レビューを作成したユーザのアバターを SmallPhotoUrl 項目を用いて丸形の <lightning-avatar> の中に表示-->
+                  <lightning-avatar variant="circle" src={boatReview.CreatedBy.SmallPhotoUrl} initials="AW"
+                    fallback-icon-name="standard:user" alternative-text={boatReview.CreatedBy.Name}
+                    class="slds-m-right_small"></lightning-avatar>
+                </div>
+                <div class="slds-media__body">
+                  <div class="slds-grid slds-grid_align-spread slds-has-flexi-truncate">
+                    <p>
+                      <!-- display creator’s name -->
+                      <!--アバターの隣には、ユーザの名前と、そのユーザの会社名を表示-->
+                      <!--レビューの作成者の詳細ページにリンクさせる-->
+                      <!--CreatedBy 項目にハイパーリンクを張り、navigateToRecord() 関数を呼び出し、
+                      Lightning ナビゲーションサービスを利用してレコードに移動し、標準のユーザレコードページに遷移。
+                      リンクには data-record-id 属性が含まれて、この属性には boatReview.CreatedBy.Id の値が格納。
+                      title はレビューの作成者を指定。
+                      関数 navigateToRecord() はハイパーリンクのタグに含まれる data-record-id 属性の値を取得し、
+                      ユーザをレビューの作成者の詳細ページに移動させるイベントを発生させる。-->
+                      <a data-record-id={boatReview.CreatedBy.Id} title={boatReview.CreatedBy.Name}
+                        onclick={navigateToRecord}>{boatReview.CreatedBy.Name}
+                      </a>
+                      <span>
+                        <!-- display creator’s company name -->{boatReview.CreatedBy.CompanyName}
+                      </span>
+                    </p>
+                  </div>
+                  <p class="slds-text-body_small">
+                    <!-- display created  date -->
+                    <!--<lightning-formatted-date-time> タグを使ってレビューが作成された日付を表示-->
+                    <lightning-formatted-date-time value={boatReview.CreatedDate}></lightning-formatted-date-time>
+                  </p>
+                </div>
+              </header>
+              <!--クラス slds-text-longform のある <div> を作成し、slds-text-title_caps のある <p> 内にレビューの件名を、
+              <lightning-formatted-rich-text> 内にレビューのコメントを、
+              読み取り専用モードで fiveStarRating を用いてレビューの評価を受け取る。-->
+              <div class="slds-text-longform">
+                <p class="slds-text-title_caps">
+                  <!-- display Name -->{boatReview.Name}
+                </p>
+                <!-- display Comment__c -->
+                <lightning-formatted-rich-text value={boatReview.Comment__c}></lightning-formatted-rich-text>
+              </div>
+              <!-- display five star rating on readonly mode -->
+              <c-five-star-rating read-only value={boatReview.Rating__c}></c-five-star-rating>
+            </article>
+          </li>
+        </template>
+        <!-- end iteration -->
+      </ul>
+    </template>
+  </div>
+</template>

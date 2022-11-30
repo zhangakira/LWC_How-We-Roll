@@ -1,0 +1,49 @@
+<template>
+  <template if:false={wiredRecord.data}>
+    <!-- lightning card for the label when wiredRecord has no data goes here  -->
+    <!--まだボートが選択されていない場合は、ユーザにボートを選択するように促すメッセージを表示する。
+    メッセージは、Please_select_a_boat という名前のカスタム表示ラベルを使用し、
+    boatDetailTabs のカスタムスタイル no-boat-height を使用して、SLDS で絶対中央配置されている <span> 内に表示してください。-->
+    <lightning-card class="slds-align_absolute-center no-boat-height">
+      <span>{label.labelPleaseSelectABoat}</span>
+    </lightning-card>
+  </template>
+  <template if:true={wiredRecord.data}>
+    <!-- lightning card for the content when wiredRecord has data goes here  -->
+    <lightning-card>
+      <!--scoped な <lightning-tabset> の中に <lightning-tab> を追加-->
+      <lightning-tabset variant="scoped">
+        <lightning-tab label={label.labelDetails}>
+          <!--タブ内に <lightning-card> を追加して詳細を表示-->
+          <!--title には boatName() を、icon-name には detailsTabIconName() を使用-->
+          <lightning-card icon-name={detailsTabIconName} title={boatName}>
+            <!--ボートレコードに遷移できるようにボタンを作成するため、<lightning-card> の中に <lightning-button> を追加-->
+            <!--actions slot に配置し、ボタンのラベルにはカスタム表示ラベル Full_Details を使用。-->
+            <!--ボタンがクリックされたときに関数 navigateToRecordViewPage() を呼び出し, boatId の値に基づいてレコードに移動するようにする。-->
+            <lightning-button slot="actions" title={boatName} label={label.labelFullDetails}
+              onclick={navigateToRecordViewPage}></lightning-button>
+            <!--表示密度が compact の <lightning-record-view-form> と各情報に対応する <lightning-output-field> を追加-->
+            <!--項目の情報を取得して表示するために、現在選択されているボートの Id と、オブジェクトに Boat__c を使用-->
+            <lightning-record-view-form density="compact" record-id={boatId} object-api-name="Boat__c">
+              <lightning-output-field field-name="BoatType__c" class="slds-form-element_1-col"></lightning-output-field>
+              <lightning-output-field field-name="Length__c" class="slds-form-element_1-col"></lightning-output-field>
+              <lightning-output-field field-name="Price__c" class="slds-form-element_1-col"></lightning-output-field>
+              <lightning-output-field field-name="Description__c" class="slds-form-element_1-col"></lightning-output-field>
+            </lightning-record-view-form>
+          </lightning-card>
+        </lightning-tab>
+        <!--次に、ボートレビューのためにさらに 2 つのタブを作成-->
+        <!--ラベルにカスタム表示ラベル Reviews を使用した <lightning-tab> の中に、現在選択されているボート Id を渡してコンポーネント boatReviews をインスタンス化-->
+        <!--注意：このタブの value プロパティに reviews を使用すると、レビューが作成された後にこのタブに戻る際に参照できるようになる-->
+        <lightning-tab label={label.labelReviews} value="reviews">
+          <c-boat-reviews record-id={boatId}></c-boat-reviews>
+        </lightning-tab>
+        <!--ラベルにカスタム表示ラベル Add_Review を使用する <lightning-tab> の中で、現在選択されているボート Id を渡して boatAddReviewForm コンポーネントをインスタンス化-->
+        <!--関数 handleReviewCreated() は、boatAddReviewForm コンポーネントから起動するカスタムイベント createreview を処理-->
+        <lightning-tab label={label.labelAddReview}>
+          <c-boat-add-review-form record-id={boatId} oncreatereview={handleReviewCreated}></c-boat-add-review-form>
+        </lightning-tab>
+      </lightning-tabset>
+    </lightning-card>
+  </template>
+</template>

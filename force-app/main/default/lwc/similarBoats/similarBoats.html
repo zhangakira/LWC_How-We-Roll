@@ -1,0 +1,22 @@
+<template>
+  <lightning-card title={getTitle} icon-name="custom:custom54">
+    <lightning-layout multiple-rows="true">
+      <template if:true={noBoats}>
+        <p class="slds-align_absolute-center">There are no related boats by {similarBy}!</p>
+      </template>
+      <!-- Loop through the list of similar boats -->
+      <!--relatedBoats リストの各ボートに対してこのコンポーネントをインスタンス化することだけであることに注意してください。
+      boat (ループの item) をパラメータとして渡し、openBoatDetailPage() 関数を使用。-->
+      <!--各 boatTile を格納するために使用される <lightning-layout-item> もレスポンシブにするよう求める。以下のプロパティを使用：
+        padding="around-small",size="12"など-->
+      <template for:each={relatedBoats} for:item="boat">
+        <!-- Responsive lightning-layout-item -->
+        <lightning-layout-item key={boat.Id} padding="around-small" size="12" small-device-size="6"
+          medium-device-size="4" large-device-size="4">
+          <!-- Each boat tile goes here -->
+          <c-boat-tile boat={boat} onboatselect={openBoatDetailPage}></c-boat-tile>
+        </lightning-layout-item>
+      </template>
+    </lightning-layout>
+  </lightning-card>
+</template>

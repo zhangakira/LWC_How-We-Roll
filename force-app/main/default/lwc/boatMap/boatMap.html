@@ -1,0 +1,13 @@
+<template>
+  <!--<lightning-map> を Current Boat Location というタイトルの <lightning-card> で囲み、ページ上の他の要素と UI の一貫性を保つためにズームレベルを 10 に設定-->
+  <lightning-card title="Current Boat Location" icon-name="action:map">
+    <template if:true={showMap}>
+      <lightning-map map-markers={mapMarkers} zoom-level="10"></lightning-map>
+    </template>
+    <template if:false={showMap}>
+      <span class="slds-align_absolute-center">
+        Please select a boat to see its location!
+      </span>
+    </template>
+  </lightning-card>
+</template>
